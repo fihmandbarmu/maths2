@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<!-- saved from url=(0037)https://fihmandbarmu.github.io/maths/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌟 Starlight Maths Tutor 🌟</title>
+  <style>
+    :root {
+      --bg-color: #FFDE59;
+      --card-bg: #FFFFFF;
+      --primary: #FF5757;
+      --secondary: #5CE1E6;
+      --accent: #CB6CE6;
+      --text: #2B2D42;
+      --correct: #7ED957;
+      --wrong: #FF5757;
+      --division: #3B82F6;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Fredoka', cursive, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #000;
+      text-shadow: 3px 3px 0px var(--accent);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Main Layout */
+    .main-wrapper {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      width: 100%;
+      max-width: 1250px;
+    }
+
+    /* Side Panels */
+    .side-panel {
+      background-color: var(--card-bg);
+      border: 5px solid #000;
+      border-radius: 20px;
+      padding: 20px;
+      width: 260px;
+      flex-shrink: 0;
+      box-shadow: 6px 6px 0px #000;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .side-panel h2 {
+      font-size: 1.5rem;
+      margin: 0;
+      text-align: center;
+      border-bottom: 3px dashed #ccc;
+      padding-bottom: 10px;
+    }
+
+    .stat-box {
+      background: #E8E8E8;
+      border: 3px solid #000;
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .stat-box.stars-box { background: #FFF066; }
+    .stat-box.correct-box { background: #E2F0D9; }
+    .stat-box.wrong-box { background: #FFE6E6; }
+
+    .stat-label { font-weight: bold; font-size: 1.1rem; }
+    .stat-value { font-size: 2rem; font-weight: bold; margin-top: 5px; }
+
+    /* History */
+    #history-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 550px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      background: #E2F0D9;
+      border: 2px solid #000;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .history-item.wrong {
+      background: #FFE6E6;
+      color: var(--wrong);
+      border-color: var(--wrong);
+    }
+
+    /* Main Center Container */
+    .container {
+      background-color: var(--card-bg);
+      border: 6px solid #000;
+      border-radius: 25px;
+      padding: 25px;
+      max-width: 780px;
+      width: 100%;
+      box-shadow: 8px 8px 0px #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .btn {
+      background-color: var(--secondary);
+      border: 3px solid #000;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 3px 3px 0px #000;
+      transition: transform 0.1s;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #000;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-red { background-color: var(--primary); color: white; }
+    .btn-orange { background-color: #FF914D; }
+    .btn-purple { background-color: #B28DFF; }
+    .btn-green { background-color: var(--correct); }
+    .btn-blue { background-color: var(--division); color: white; }
+    .btn-check { width: 100%; margin-top: 15px; font-size: 1.3rem; padding: 12px; background-color: var(--correct); color: #000;}
+
+    /* Maths Grid */
+    .grid-container {
+      display: grid;
+      gap: 6px;
+      margin: 15px 0;
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-align: center;
+      align-items: center;
+      overflow-x: auto;
+      max-width: 100%;
+      padding-bottom: 5px;
+    }
+
+    .place-header {
+      font-size: 0.95rem;
+      color: #555;
+      background: #E8E8E8;
+      border-radius: 8px;
+      padding: 2px;
+      border: 2px solid #000;
+    }
+
+    .exchange-box {
+      width: 60px;
+      height: 38px;
+      font-size: 1.1rem;
+      text-align: center;
+      border: 2px dashed #000;
+      border-radius: 8px;
+      background-color: #FFF3B0;
+      margin: 0 auto;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .exchange-box.wrong-input {
+      background-color: #FFE6E6 !important;
+      border-color: var(--wrong) !important;
+      color: var(--wrong) !important;
+      border-style: solid !important;
+    }
+
+    .exchange-box.correct-input {
+      background-color: #E2F0D9 !important;
+      border-color: #2E7D32 !important;
+      color: #1B5E20 !important;
+      border-style: solid !important;
+    }
+    
+    .working-box {
+      background-color: #EBF4FF;
+      border: 2px dotted var(--division);
+    }
+
+    .cross-box {
+      width: 60px;
+      height: 30px;
+      font-size: 1rem;
+      text-align: center;
+      border: 2px dotted #FF5757;
+      border-radius: 6px;
+      background-color: #FFE6E6;
+      margin: 0 auto;
+      color: #D32F2F;
+      font-weight: bold;
+    }
+
+    .cell {
+      width: 60px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .answer-input {
+      width: 60px;
+      height: 50px;
+      font-size: 1.8rem;
+      text-align: center;
+      border: 3px solid #000;
+      border-radius: 10px;
+      background-color: #E2F0D9;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .answer-input.wrong-input {
+      background-color: #FFE6E6;
+      border-color: var(--wrong);
+      color: var(--wrong);
+      box-shadow: inset 0 0 5px rgba(255, 87, 87, 0.5);
+    }
+
+    .line {
+      grid-column: 1 / -1;
+      height: 4px;
+      background-color: #000;
+      margin: 4px 0;
+    }
+    
+    .div-line {
+      height: 4px;
+      background-color: #000;
+      margin-top: auto;
+    }
+
+    /* Guidance Box */
+    .tutor-box {
+      background-color: #EBF4FF;
+      border: 3px solid #3182CE;
+      border-radius: 15px;
+      padding: 15px;
+      width: 100%;
+      text-align: center;
+      font-size: 1.15rem;
+      margin-top: 15px;
+    }
+
+    .tutor-avatar {
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+
+    @media (max-width: 1050px) {
+      .main-wrapper { flex-direction: column; align-items: center; }
+      .side-panel { width: 100%; max-width: 780px; }
+      #history-list { flex-direction: row; overflow-x: auto; max-height: 100px; }
+      .history-item { flex-shrink: 0; padding: 10px 20px;}
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⭐ Starlight Maths! ⭐</h1>
+
+  <div class="main-wrapper">
+    
+    <!-- LEFT PANEL: Statistics -->
+    <div class="side-panel stats-panel">
+      <h2>📊 Data</h2>
+      <div class="stat-box stars-box">
+        <div class="stat-label">Starpoints 🌟</div>
+        <div class="stat-value" id="stat-stars">0</div>
+      </div>
+      <div class="stat-box correct-box">
+        <div class="stat-label">Correct ✅</div>
+        <div class="stat-value" id="stat-correct">0</div>
+      </div>
+      <div class="stat-box wrong-box">
+        <div class="stat-label">Incorrect ❌</div>
+        <div class="stat-value" id="stat-wrong" style="color: var(--wrong);">0</div>
+      </div>
+    </div>
+
+    <!-- CENTER PANEL: Main Game -->
+    <div class="container">
+      
+      <!-- Mode Buttons -->
+      <div class="nav-buttons">
+        <button class="btn btn-red" onclick="setMode(&#39;add2&#39;)">+ 2-Digit</button>
+        <button class="btn btn-red" onclick="setMode(&#39;add3&#39;)">+ 3-Digit</button>
+        <button class="btn btn-red" onclick="setMode(&#39;add4&#39;)">+ 4-Digit</button>
+        <button class="btn btn-red" onclick="setMode(&#39;add5&#39;)">+ 5-Digit</button>
+        <button class="btn btn-red" onclick="setMode(&#39;add6&#39;)">+ 6-Digit</button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-orange" onclick="setMode(&#39;sub2&#39;)">- 2-Digit</button>
+        <button class="btn btn-orange" onclick="setMode(&#39;sub3&#39;)">- 3-Digit</button>
+        <button class="btn btn-orange" onclick="setMode(&#39;sub4&#39;)">- 4-Digit</button>
+        <button class="btn btn-orange" onclick="setMode(&#39;sub5&#39;)">- 5-Digit</button>
+        <button class="btn btn-orange" onclick="setMode(&#39;sub6&#39;)">- 6-Digit</button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-blue" onclick="setMode(&#39;mult2&#39;)">× 2-Digit</button>
+        <button class="btn btn-blue" onclick="setMode(&#39;mult3&#39;)">× 3-Digit</button>
+        <button class="btn btn-blue" onclick="setMode(&#39;mult4&#39;)">× 4-Digit</button>
+        <button class="btn btn-blue" onclick="setMode(&#39;mult5&#39;)">× 5-Digit</button>
+        <button class="btn btn-blue" onclick="setMode(&#39;mult6&#39;)">× 6-Digit</button>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-green" onclick="setMode(&#39;div2&#39;)">÷ 2-Digit</button>
+        <button class="btn btn-green" onclick="setMode(&#39;div3&#39;)">÷ 3-Digit</button>
+        <button class="btn btn-green" onclick="setMode(&#39;div4&#39;)">÷ 4-Digit</button>
+        <button class="btn btn-green" onclick="setMode(&#39;div5&#39;)">÷ 5-Digit</button>
+        <button class="btn btn-green" onclick="setMode(&#39;div6&#39;)">÷ 6-Digit</button>
+      </div>
+
+      <!-- Column Math Interface -->
+      <div id="column-ui" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <div id="column-grid" class="grid-container" style="grid-template-columns: repeat(3, 65px);"><div class="place-header">H</div><div class="place-header">T</div><div class="place-header">O</div><div class="cell"></div><input type="text" maxlength="2" class="exchange-box" id="carry-1" placeholder="1"><input type="text" maxlength="2" class="exchange-box" id="carry-0" placeholder="1"><div class="cell"></div><div class="cell">7</div><div class="cell">8</div><div class="cell">+</div><div class="cell">9</div><div class="cell">2</div><div class="line"></div><input type="text" maxlength="1" class="answer-input" id="ans-2"><input type="text" maxlength="1" class="answer-input" id="ans-1"><input type="text" maxlength="1" class="answer-input" id="ans-0"></div>
+        <button id="btn-check-ans" class="btn btn-check" onclick="checkAnswer()">Final Answer! ✅</button>
+      </div>
+
+      <!-- Helpful Assistant Box -->
+      <div class="tutor-box">
+        <div class="tutor-avatar">🤖</div>
+        <div id="tutor-msg">Start adding from the Ones column! Write any carried numbers in the top yellow boxes! 📦</div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: History -->
+    <div class="side-panel history-panel">
+      <h2>📜 History</h2>
+      <ul id="history-list"></ul>
+    </div>
+
+  </div>
+
+  <script>
+    let currentMode = '';
+    let digitsCount = 2;
+    let isSubtraction = false;
+    let isDivision = false;
+    let numA = 0, numB = 0;
+    
+    // Lock flag to prevent double clicking
+    let isProcessing = false;
+
+    // Tracking Variables
+    let stats = { stars: 0, correct: 0, wrong: 0 };
+    let consecutiveWrongs = 0; 
+    let currentProblemStr = "";
+
+    // Place names ordered right to left (0 = Ones, 1 = Tens, ...)
+    const PLACE_NAMES = ['O', 'T', 'H', 'Th', 'TTh', 'HTh', 'M'];
+
+    // Web Audio FX
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        if (type === 'correct') {
+          osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.3);
+          gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else if (type === 'exchange') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+          osc.frequency.setValueAtTime(700, audioCtx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        } else {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        }
+      } catch(e) {}
+    }
+
+    // Input sanitizer: strictly restricts allowed characters (blocks letters)
+    function attachInputSanitizer(input, type = 'number') {
+      input.addEventListener('input', function() {
+        if (type === 'number') {
+          this.value = this.value.replace(/[^0-9]/g, '');
+        } else if (type === 'cross') {
+          this.value = this.value.replace(/[^0-9/]/g, '');
+        }
+      });
+    }
+
+    function updateStatsUI() {
+      document.getElementById('stat-stars').innerText = stats.stars;
+      document.getElementById('stat-correct').innerText = stats.correct;
+      document.getElementById('stat-wrong').innerText = stats.wrong;
+    }
+
+    function addToHistory(logText, isWrong = false) {
+      const list = document.getElementById('history-list');
+      const li = document.createElement('li');
+      li.className = 'history-item';
+      if (isWrong) li.classList.add('wrong');
+      li.innerText = logText;
+      list.prepend(li);
+    }
+
+    function setMode(mode) {
+      if (isProcessing) return; // Prevent double clicking on mode buttons
+      currentMode = mode;
+      digitsCount = parseInt(mode.replace(/\D/g, ''), 10) || 2; 
+      isSubtraction = mode.startsWith('sub');
+      isDivision = mode.startsWith('div');
+      
+      if (isDivision) {
+        generateDivisionProblem();
+      } else {
+        generateColumnProblem();
+      }
+    }
+
+    function generateDivisionProblem() {
+      consecutiveWrongs = 0;
+      
+      const minA = Math.pow(10, digitsCount - 1);
+      const maxA = Math.pow(10, digitsCount) - 1;
+      
+      // Divisor (1 digit: 2 to 9)
+      numB = Math.floor(Math.random() * 8) + 2; 
+      
+      // Dividend (Make perfectly divisible)
+      let tempA = Math.floor(Math.random() * (maxA - minA + 1)) + minA;
+      tempA = tempA - (tempA % numB);
+      if (tempA < minA) tempA += numB;
+      numA = tempA;
+
+      currentProblemStr = `${numA} ÷ ${numB}`;
+
+      const grid = document.getElementById('column-grid');
+      grid.innerHTML = '';
+      
+      grid.style.gridTemplateColumns = `40px 20px repeat(${digitsCount}, 60px)`;
+
+      // Row 1: Quotient Answer Boxes (Top)
+      grid.appendChild(createCell(''));
+      grid.appendChild(createCell(''));
+      for (let i = 0; i < digitsCount; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.maxLength = 1;
+        input.className = 'answer-input';
+        input.id = `ans-div-${i}`;
+        attachInputSanitizer(input, 'number');
+        input.addEventListener('input', function() { this.classList.remove('wrong-input'); });
+        grid.appendChild(input);
+      }
+
+      // Row 2: Divider Line
+      grid.appendChild(createCell(''));
+      grid.appendChild(createCell(''));
+      const line = document.createElement('div');
+      line.className = 'div-line';
+      line.style.gridColumn = `3 / -1`;
+      grid.appendChild(line);
+
+      // Row 3: Divisor & Dividend
+      grid.appendChild(createCell(numB));
+      grid.appendChild(createCell(')'));
+      const strA = numA.toString();
+      for (let char of strA) {
+        grid.appendChild(createCell(char));
+      }
+
+      // Row 4 & 5: Working Out boxes (Optional for remainders)
+      for(let row = 0; row < 2; row++) {
+        grid.appendChild(createCell(''));
+        grid.appendChild(createCell(''));
+        for (let i = 0; i < digitsCount; i++) {
+          const workInput = document.createElement('input');
+          workInput.type = 'text';
+          workInput.maxLength = 2;
+          workInput.className = 'exchange-box working-box';
+          workInput.placeholder = "rem";
+          attachInputSanitizer(workInput, 'number');
+          grid.appendChild(workInput);
+        }
+      }
+
+      document.getElementById('tutor-msg').innerHTML = 
+        `Divide from left to right! Type your answers in the green boxes on top. Use the blue dotted boxes to write your remainders! ➗`;
+    }
+
+    function generateColumnProblem() {
+      consecutiveWrongs = 0; 
+      
+      const minA = Math.pow(10, digitsCount - 1);
+      const maxA = Math.pow(10, digitsCount) - 1;
+      
+      let valA = Math.floor(Math.random() * (maxA - minA + 1)) + minA;
+      let valB;
+
+      if (currentMode.startsWith('mult')) {
+        valB = Math.floor(Math.random() * 8) + 2; 
+      } else {
+        const minB = Math.pow(10, digitsCount - 1);
+        const maxB = Math.pow(10, digitsCount) - 1;
+        valB = Math.floor(Math.random() * (maxB - minB + 1)) + minB;
+      }
+
+      if (isSubtraction) {
+        numA = Math.max(valA, valB);
+        numB = Math.min(valA, valB);
+      } else {
+        numA = valA;
+        numB = valB;
+      }
+
+      const operatorSymbol = isSubtraction ? '-' : (currentMode.startsWith('mult') ? '×' : '+');
+      currentProblemStr = `${numA} ${operatorSymbol} ${numB}`;
+
+      const grid = document.getElementById('column-grid');
+      grid.innerHTML = '';
+      
+      const cols = digitsCount + 1; 
+      grid.style.gridTemplateColumns = `repeat(${cols}, 65px)`;
+
+      // Row 1: Place Value Headers
+      const allHeaders = ['M', 'HTh', 'TTh', 'Th', 'H', 'T', 'O'];
+      const headers = allHeaders.slice(allHeaders.length - cols);
+      headers.forEach(h => grid.appendChild(createCell(h, 'place-header')));
+
+      // Row 2: Exchange / Carry Row
+      grid.appendChild(createCell('')); 
+      for (let i = 1; i < cols; i++) {
+        const placeIdx = cols - 1 - i; // Place value index (0=Ones, 1=Tens, 2=Hundreds...)
+        const carryInput = document.createElement('input');
+        carryInput.type = 'text';
+        carryInput.maxLength = 2;
+        carryInput.className = 'exchange-box';
+        carryInput.id = `carry-${placeIdx}`;
+        carryInput.placeholder = isSubtraction ? "new" : "1";
+        attachInputSanitizer(carryInput, 'number');
+        carryInput.oninput = () => {
+          carryInput.value = carryInput.value.replace(/[^0-9]/g, '');
+          carryInput.classList.remove('wrong-input', 'correct-input');
+          playSound('exchange');
+        };
+        grid.appendChild(carryInput);
+      }
+
+      // Row 3: Subtraction Crosses
+      if (isSubtraction) {
+        grid.appendChild(createCell(''));
+        for (let i = 0; i < cols - 1; i++) {
+          const crossInput = document.createElement('input');
+          crossInput.type = 'text';
+          crossInput.maxLength = 1;
+          crossInput.className = 'cross-box';
+          crossInput.placeholder = "/";
+          attachInputSanitizer(crossInput, 'cross');
+          grid.appendChild(crossInput);
+        }
+      }
+
+      // Row 4: Top Number 
+      const strA = numA.toString().padStart(cols - 1, ' ');
+      grid.appendChild(createCell('')); 
+      for (let char of strA) grid.appendChild(createCell(char));
+
+      // Row 5: Math Symbol & Bottom Number
+      const strB = numB.toString().padStart(cols - 1, ' ');
+      grid.appendChild(createCell(operatorSymbol));
+      for (let char of strB) grid.appendChild(createCell(char));
+
+      // Divider Line
+      const line = document.createElement('div');
+      line.className = 'line';
+      grid.appendChild(line);
+
+      // Row 6: Answer Row
+      for (let i = 0; i < cols; i++) {
+        const ansInput = document.createElement('input');
+        ansInput.type = 'text';
+        ansInput.maxLength = 1;
+        ansInput.className = 'answer-input';
+        ansInput.id = `ans-${cols - 1 - i}`; // IDs 0,1,2... right to left
+        attachInputSanitizer(ansInput, 'number');
+        ansInput.addEventListener('input', function() { this.classList.remove('wrong-input'); });
+        grid.appendChild(ansInput);
+      }
+
+      if (isSubtraction) {
+        document.getElementById('tutor-msg').innerHTML = `Need to borrow? Type a <b>/</b> in the red box to cross out, then write the new value in the top box! ✂️`;
+      } else if (currentMode.startsWith('mult')) {
+        document.getElementById('tutor-msg').innerHTML = `Multiply from right to left! Carry any tens to the top yellow boxes! 🚀`;
+      } else {
+        document.getElementById('tutor-msg').innerHTML = `Start adding from the Ones column! Write any carried numbers in the top yellow boxes! 📦`;
+      }
+    }
+
+    function createCell(text, className = 'cell') {
+      const div = document.createElement('div');
+      div.className = className;
+      div.innerText = text;
+      return div;
+    }
+
+    // Calculates expected carries / exchanges for each column
+    function getExpectedExchanges() {
+      let expected = {};
+      if (isDivision) return expected;
+
+      if (currentMode.startsWith('add')) {
+        let carry = 0;
+        for (let p = 0; p < digitsCount; p++) {
+          let dA = Math.floor(numA / Math.pow(10, p)) % 10;
+          let dB = Math.floor(numB / Math.pow(10, p)) % 10;
+          let sum = dA + dB + carry;
+          carry = Math.floor(sum / 10);
+          expected[p + 1] = carry > 0 ? carry.toString() : "";
+        }
+      } else if (currentMode.startsWith('mult')) {
+        let carry = 0;
+        for (let p = 0; p < digitsCount; p++) {
+          let dA = Math.floor(numA / Math.pow(10, p)) % 10;
+          let prod = dA * numB + carry;
+          carry = Math.floor(prod / 10);
+          expected[p + 1] = carry > 0 ? carry.toString() : "";
+        }
+      } else if (isSubtraction) {
+        let digitsA = [];
+        for (let p = 0; p < digitsCount; p++) {
+          digitsA.push(Math.floor(numA / Math.pow(10, p)) % 10);
+        }
+        let modified = new Array(digitsCount).fill(false);
+        for (let p = 0; p < digitsCount; p++) {
+          let dB = Math.floor(numB / Math.pow(10, p)) % 10;
+          if (digitsA[p] < dB) {
+            let k = p + 1;
+            while (k < digitsCount && digitsA[k] === 0) k++;
+            if (k < digitsCount) {
+              digitsA[k] -= 1;
+              modified[k] = true;
+              for (let j = k - 1; j > p; j--) {
+                digitsA[j] = 9;
+                modified[j] = true;
+              }
+              digitsA[p] += 10;
+              modified[p] = true;
+            }
+          }
+        }
+        for (let p = 0; p < digitsCount; p++) {
+          expected[p] = modified[p] ? digitsA[p].toString() : "";
+        }
+      }
+      return expected;
+    }
+
+    function checkAnswer() {
+      // Guard against double clicking
+      if (isProcessing) return;
+      isProcessing = true;
+
+      const checkBtn = document.getElementById('btn-check-ans');
+      checkBtn.disabled = true;
+
+      let expected;
+      if (isDivision) { expected = numA / numB; } 
+      else if (isSubtraction) { expected = numA - numB; } 
+      else if (currentMode.startsWith('mult')) { expected = numA * numB; } 
+      else { expected = numA + numB; }
+
+      let userAnsStr = '';
+      let hasInput = false;
+      const cols = isDivision ? digitsCount : digitsCount + 1;
+      
+      // Assemble User Answer
+      if (isDivision) {
+        for (let i = 0; i < digitsCount; i++) {
+          const val = document.getElementById(`ans-div-${i}`).value.trim();
+          if (val !== '') hasInput = true;
+          userAnsStr += val;
+        }
+      } else {
+        for (let i = cols - 1; i >= 0; i--) {
+          const val = document.getElementById(`ans-${i}`).value.trim();
+          if (val !== '') hasInput = true;
+          userAnsStr += val;
+        }
+      }
+
+      if (!hasInput) {
+        document.getElementById('tutor-msg').innerHTML = "Don't forget to type in your answer before checking! 🤔";
+        isProcessing = false;
+        checkBtn.disabled = false;
+        return;
+      }
+
+      // Check and visually mark the Exchange / Carry Boxes
+      let expectedExchanges = getExpectedExchanges();
+      let exchangesCorrect = true;
+
+      if (!isDivision) {
+        for (let p = 0; p < digitsCount; p++) {
+          let carryElem = document.getElementById(`carry-${p}`);
+          if (carryElem) {
+            let userVal = carryElem.value.trim();
+            let expVal = expectedExchanges[p] || "";
+
+            if (expVal !== "") {
+              if (userVal === expVal) {
+                carryElem.classList.add('correct-input');
+                carryElem.classList.remove('wrong-input');
+              } else {
+                carryElem.classList.add('wrong-input');
+                carryElem.classList.remove('correct-input');
+                exchangesCorrect = false;
+              }
+            } else {
+              if (userVal !== "" && userVal !== "0") {
+                carryElem.classList.add('wrong-input');
+                carryElem.classList.remove('correct-input');
+                exchangesCorrect = false;
+              } else {
+                carryElem.classList.remove('wrong-input', 'correct-input');
+              }
+            }
+          }
+        }
+      }
+
+      const userAnsNum = parseInt(userAnsStr, 10);
+
+      // Check if mathematically correct AND exchanges are accurate
+      if (userAnsNum === expected && exchangesCorrect) {
+        playSound('correct');
+        stats.stars += 10;
+        stats.correct++;
+        updateStatsUI();
+        addToHistory(`${currentProblemStr} = ${expected} ✅`, false);
+        
+        document.getElementById('tutor-msg').innerText = "Super star work! Fantastic calculation! 🌟";
+        setTimeout(() => {
+          isDivision ? generateDivisionProblem() : generateColumnProblem();
+          isProcessing = false;
+          checkBtn.disabled = false;
+        }, 1800);
+        return;
+      }
+
+      // -- WRONG ANSWER LOGIC --
+      playSound('wrong');
+      stats.stars -= 1;
+      stats.wrong++;
+      consecutiveWrongs++;
+      updateStatsUI();
+
+      let wrongPlaces = [];
+      let formattedUserAns = "";
+      let expStr = expected.toString();
+      
+      if (isDivision) {
+         let paddedExp = expStr.padStart(digitsCount, ' ');
+         for (let i = 0; i < digitsCount; i++) {
+            let uInput = document.getElementById(`ans-div-${i}`);
+            let uVal = uInput.value.trim();
+            formattedUserAns += uVal === '' ? '_' : uVal;
+
+            let expChar = paddedExp[i];
+            let isZeroSpaceEquivalent = (expChar === ' ' && uVal === '0') || (expChar === '0' && uVal === '');
+            
+            if (uVal !== expChar && !isZeroSpaceEquivalent) {
+                uInput.classList.add('wrong-input');
+                let placeIndex = digitsCount - 1 - i;
+                wrongPlaces.push(PLACE_NAMES[placeIndex] || `Col ${placeIndex + 1}`);
+            } else {
+                uInput.classList.remove('wrong-input');
+            }
+         }
+      } else {
+         let paddedExp = expStr.padStart(cols, ' ');
+         for (let i = cols - 1; i >= 0; i--) {
+            let uInput = document.getElementById(`ans-${i}`);
+            let uVal = uInput.value.trim();
+            formattedUserAns += uVal === '' ? '_' : uVal;
+
+            let expCharIndex = cols - 1 - i;
+            let expChar = paddedExp[expCharIndex];
+            
+            let isZeroSpaceEquivalent = (expChar === ' ' && uVal === '0');
+
+            if (uVal !== expChar && !isZeroSpaceEquivalent) {
+                uInput.classList.add('wrong-input');
+                wrongPlaces.push(PLACE_NAMES[i] || `Col ${i + 1}`);
+            } else {
+                uInput.classList.remove('wrong-input');
+            }
+         }
+      }
+
+      formattedUserAns = formattedUserAns.replace(/^_+/, ''); 
+      if (formattedUserAns === '') formattedUserAns = '0';
+      addToHistory(`${currentProblemStr} = ${formattedUserAns} ❌`, true);
+
+      wrongPlaces = [...new Set(wrongPlaces)].reverse();
+
+      let hintText = `💡 <b>Hint:</b> Check the highlighted boxes!<br>`;
+      if (wrongPlaces.length > 0) {
+        hintText += `You have mistakes in the <b>${wrongPlaces.join(' and ')}</b> column(s).<br>`;
+      }
+      if (!exchangesCorrect) {
+        hintText += `Check your top yellow carry/exchange boxes too!<br>`;
+      }
+      
+      if (consecutiveWrongs >= 3) {
+          if (currentMode.startsWith('add')) hintText += "Make sure you add any 1s you carried over to the top!";
+          if (isSubtraction) hintText += "If the top number is smaller, you MUST cross out the neighbor and borrow 10!";
+          if (currentMode.startsWith('mult')) hintText += "Multiply the bottom number by the top digit, and add your carried tens!";
+          if (isDivision) hintText += "Check your remainders as you divide left to right!";
+      } else {
+          hintText += "Try fixing those specific boxes! You can do it! 💪";
+      }
+
+      document.getElementById('tutor-msg').innerHTML = hintText;
+      
+      // Re-enable for retry after short debounce
+      setTimeout(() => {
+        isProcessing = false;
+        checkBtn.disabled = false;
+      }, 400);
+    }
+
+    // Initialize
+    setMode('add2');
+  </script>
+
+
+</body></html>
